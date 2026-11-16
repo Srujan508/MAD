@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Smart SMS Categorizer</string>
+    <string name="app_tagline">Automatic SMS Classification &amp; Organization</string>
+    <string name="dashboard_title">SMS Dashboard</string>
+    <string name="total_messages">Total Messages</string>
+    <string name="search_hint">Search messages, sender, OTP, amount…</string>
+    <string name="refresh_tooltip">Refresh SMS</string>
+    <string name="load_demo_sms">Load Demo SMS</string>
+    <string name="clear_cache">Clear Database</string>
+
+    <!-- Categories -->
+    <string name="category_banking">Banking</string>
+    <string name="category_otp">OTP</string>
+    <string name="category_information">Information</string>
+    <string name="category_promotions">Promotions</string>
+    <string name="category_personal">Personal</string>
+
+    <!-- Category Descriptions -->
+    <string name="desc_banking">Bank transactions, debits, credits, UPI &amp; balance</string>
+    <string name="desc_otp">Verification codes, logins &amp; one-time passwords</string>
+    <string name="desc_information">College alerts, deliveries, bills &amp; reminders</string>
+    <string name="desc_promotions">Deals, discounts, coupons &amp; marketing offers</string>
+    <string name="desc_personal">Direct personal texts &amp; uncategorized messages</string>
+
+    <!-- Permissions -->
+    <string name="permission_title">SMS Permission Required</string>
+    <string name="permission_rationale">Smart SMS Categorizer needs permission to read SMS messages stored on your device to organize them into Banking, OTP, Information, Promotions, and Personal categories. All processing happens 100% locally on your phone without internet or external servers.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="permission_denied_warning">SMS permission was denied. The app cannot read incoming or stored device messages without this permission. You can still test all features using "Load Demo SMS".</string>
+
+    <!-- Detail Screen -->
+    <string name="message_details">Message Details</string>
+    <string name="sender_label">Sender / Address</string>
+    <string name="date_label">Received Date &amp; Time</string>
+    <string name="category_label">Classified Category</string>
+    <string name="message_body_label">Message Body</string>
+    <string name="copy_text">Copy Message</string>
+    <string name="delete_text">Delete Record</string>
+    <string name="copied_to_clipboard">Message copied to clipboard!</string>
+
+    <!-- Statuses -->
+    <string name="no_messages_found">No messages found in this category.</string>
+    <string name="no_search_results">No messages match your search query.</string>
+    <string name="syncing_messages">Reading and categorizing SMS…</string>
+</resources>

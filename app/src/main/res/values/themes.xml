@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.SmartSMSCategorizer" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <!-- Alias for backward compatibility if referred to as Theme.Miniproject -->
+    <style name="Theme.Miniproject" parent="Theme.SmartSMSCategorizer" />
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand / Theme Colors -->
+    <color name="colorPrimary">#1E3A8A</color>
+    <color name="colorPrimaryDark">#0F172A</color>
+    <color name="colorPrimaryLight">#3B82F6</color>
+    <color name="colorAccent">#2563EB</color>
+
+    <!-- Neutral Colors -->
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_stroke">#E2E8F0</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Category Palette (Primary / Accent / Light Tint) -->
+    <!-- 1. Banking (Blue) -->
+    <color name="category_banking">#1D4ED8</color>
+    <color name="category_banking_bg">#EFF6FF</color>
+    <color name="category_banking_border">#BFDBFE</color>
+
+    <!-- 2. OTP (Orange/Amber) -->
+    <color name="category_otp">#D97706</color>
+    <color name="category_otp_bg">#FFFBEB</color>
+    <color name="category_otp_border">#FDE68A</color>
+
+    <!-- 3. Information (Purple) -->
+    <color name="category_info">#7C3AED</color>
+    <color name="category_info_bg">#F5F3FF</color>
+    <color name="category_info_border">#DDD6FE</color>
+
+    <!-- 4. Promotions (Emerald Green) -->
+    <color name="category_promo">#059669</color>
+    <color name="category_promo_bg">#ECFDF5</color>
+    <color name="category_promo_border">#A7F3D0</color>
+
+    <!-- 5. Personal (Teal / Cyan) -->
+    <color name="category_personal">#0284C7</color>
+    <color name="category_personal_bg">#F0F9FF</color>
+    <color name="category_personal_border">#BAE6FD</color>
+
+    <!-- Utility Colors -->
+    <color name="danger">#DC2626</color>
+    <color name="success">#16A34A</color>
+</resources>
