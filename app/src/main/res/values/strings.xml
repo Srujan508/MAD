@@ -39,6 +39,9 @@
     <string name="copied_to_clipboard">Message copied to clipboard!</string>
 
     <!-- Statuses -->
+    <string name="recent_messages">Recent Messages</string>
+    <string name="search_results_for">Search Results for \"%1$s\"</string>
+    <string name="category_messages_title">%1$s Messages</string>
     <string name="no_messages_found">No messages found in this category.</string>
     <string name="no_search_results">No messages match your search query.</string>
     <string name="syncing_messages">Reading and categorizing SMS…</string>

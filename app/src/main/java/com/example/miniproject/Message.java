@@ -1,11 +1,13 @@
 package com.example.miniproject;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Model class representing an SMS message in the application.
  * Implements Serializable so it can be passed across Activities via Intent.
  */
+@SuppressWarnings("unused")
 public class Message implements Serializable {
 
     private int id;                 // Primary key in SQLite
@@ -59,7 +61,7 @@ public class Message implements Serializable {
     }
 
     public String getSender() {
-        return sender != null ? sender : "Unknown";
+        return Objects.requireNonNullElse(sender, "Unknown");
     }
 
     public void setSender(String sender) {
@@ -67,7 +69,7 @@ public class Message implements Serializable {
     }
 
     public String getBody() {
-        return body != null ? body : "";
+        return Objects.requireNonNullElse(body, "");
     }
 
     public void setBody(String body) {
@@ -83,7 +85,7 @@ public class Message implements Serializable {
     }
 
     public String getFormattedDate() {
-        return formattedDate != null ? formattedDate : "";
+        return Objects.requireNonNullElse(formattedDate, "");
     }
 
     public void setFormattedDate(String formattedDate) {
@@ -91,7 +93,7 @@ public class Message implements Serializable {
     }
 
     public String getCategory() {
-        return category != null ? category : SMSCategorizer.CATEGORY_PERSONAL;
+        return Objects.requireNonNullElse(category, SMSCategorizer.CATEGORY_PERSONAL);
     }
 
     public void setCategory(String category) {

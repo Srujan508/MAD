@@ -3,11 +3,10 @@ package com.example.miniproject;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +40,14 @@ public class MessageDetailActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        message = (Message) getIntent().getSerializableExtra("EXTRA_MESSAGE");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            message = getIntent().getSerializableExtra("EXTRA_MESSAGE", Message.class);
+        } else {
+            @SuppressWarnings("deprecation")
+            Message msg = (Message) getIntent().getSerializableExtra("EXTRA_MESSAGE");
+            message = msg;
+        }
+
         if (message == null) {
             Toast.makeText(this, "Message details unavailable", Toast.LENGTH_SHORT).show();
             finish();
@@ -117,33 +123,10 @@ public class MessageDetailActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBackDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        btnCopyText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                copyMessageToClipboard();
-            }
-        });
-
-        btnShareDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareMessage();
-            }
-        });
-
-        btnDeleteDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDelete();
-            }
-        });
+        btnBackDetail.setOnClickListener(v -> finish());
+        btnCopyText.setOnClickListener(v -> copyMessageToClipboard());
+        btnShareDetail.setOnClickListener(v -> shareMessage());
+        btnDeleteDetail.setOnClickListener(v -> confirmDelete());
     }
 
     private void copyMessageToClipboard() {
@@ -167,13 +150,10 @@ public class MessageDetailActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Saved Record")
                 .setMessage("Are you sure you want to remove this message from Smart SMS Categorizer?\n\nNote: Original SMS on your phone will NOT be deleted.")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dbHelper.deleteMessage(message.getId());
-                        Toast.makeText(MessageDetailActivity.this, "Message removed from app database", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    dbHelper.deleteMessage(message.getId());
+                    Toast.makeText(MessageDetailActivity.this, "Message removed from app database", Toast.LENGTH_SHORT).show();
+                    finish();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

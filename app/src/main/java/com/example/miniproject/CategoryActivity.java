@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -29,7 +28,6 @@ public class CategoryActivity extends AppCompatActivity {
     private TextView tvCategoryCountBadge;
     private ImageView imgCategoryToolbarIcon;
     private FrameLayout avatarCategoryToolbar;
-    private ImageView btnBack;
 
     private EditText etSearchCategory;
     private ImageView btnClearSearchCategory;
@@ -69,7 +67,7 @@ public class CategoryActivity extends AppCompatActivity {
         tvCategoryCountBadge = findViewById(R.id.tvCategoryCountBadge);
         imgCategoryToolbarIcon = findViewById(R.id.imgCategoryToolbarIcon);
         avatarCategoryToolbar = findViewById(R.id.avatarCategoryToolbar);
-        btnBack = findViewById(R.id.btnBack);
+        ImageView btnBack = findViewById(R.id.btnBack);
 
         etSearchCategory = findViewById(R.id.etSearchCategory);
         btnClearSearchCategory = findViewById(R.id.btnClearSearchCategory);
@@ -79,16 +77,11 @@ public class CategoryActivity extends AppCompatActivity {
         tvCategoryEmptyMessage = findViewById(R.id.tvCategoryEmptyMessage);
         recyclerViewCategory = findViewById(R.id.recyclerViewCategory);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void setupStyling() {
-        tvCategoryTitle.setText(categoryName + " Messages");
+        tvCategoryTitle.setText(getString(R.string.category_messages_title, categoryName));
 
         int catColor = SMSCategorizer.getCategoryColor(this, categoryName);
         int catBgColor = SMSCategorizer.getCategoryBgColor(this, categoryName);
@@ -116,13 +109,10 @@ public class CategoryActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this));
-        messageAdapter = new MessageAdapter(this, null, new MessageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Message message) {
-                Intent intent = new Intent(CategoryActivity.this, MessageDetailActivity.class);
-                intent.putExtra("EXTRA_MESSAGE", message);
-                startActivity(intent);
-            }
+        messageAdapter = new MessageAdapter(this, null, message -> {
+            Intent intent = new Intent(CategoryActivity.this, MessageDetailActivity.class);
+            intent.putExtra("EXTRA_MESSAGE", message);
+            startActivity(intent);
         });
         recyclerViewCategory.setAdapter(messageAdapter);
     }
@@ -148,22 +138,18 @@ public class CategoryActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        btnClearSearchCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etSearchCategory.setText("");
-            }
-        });
+        btnClearSearchCategory.setOnClickListener(v -> etSearchCategory.setText(""));
     }
 
     private void loadCategoryMessages() {
         List<Message> messages = dbHelper.getMessagesByCategory(categoryName);
         int count = messages.size();
-        tvCategoryCountBadge.setText(count + (count == 1 ? " message" : " messages"));
+        String countStr = count + (count == 1 ? " message" : " messages");
+        tvCategoryCountBadge.setText(countStr);
 
         if (messages.isEmpty()) {
             layoutCategoryEmpty.setVisibility(View.VISIBLE);
-            tvCategoryEmptyMessage.setText("No " + categoryName + " messages found.");
+            tvCategoryEmptyMessage.setText(getString(R.string.no_messages_found));
             recyclerViewCategory.setVisibility(View.GONE);
         } else {
             layoutCategoryEmpty.setVisibility(View.GONE);
@@ -176,11 +162,12 @@ public class CategoryActivity extends AppCompatActivity {
     private void performSearch(String query) {
         List<Message> results = dbHelper.searchMessagesByCategory(categoryName, query);
         int count = results.size();
-        tvCategoryCountBadge.setText(count + (count == 1 ? " match" : " matches"));
+        String countStr = count + (count == 1 ? " match" : " matches");
+        tvCategoryCountBadge.setText(countStr);
 
         if (results.isEmpty()) {
             layoutCategoryEmpty.setVisibility(View.VISIBLE);
-            tvCategoryEmptyMessage.setText("No " + categoryName + " messages match \"" + query + "\"");
+            tvCategoryEmptyMessage.setText(getString(R.string.no_search_results));
             recyclerViewCategory.setVisibility(View.GONE);
         } else {
             layoutCategoryEmpty.setVisibility(View.GONE);

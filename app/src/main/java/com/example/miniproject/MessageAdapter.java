@@ -9,10 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * RecyclerView Adapter for displaying list of messages in Dashboard & Category views.
@@ -29,12 +29,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public MessageAdapter(Context context, List<Message> messageList, OnItemClickListener listener) {
         this.context = context;
-        this.messageList = messageList != null ? messageList : new ArrayList<Message>();
+        this.messageList = Objects.requireNonNullElseGet(messageList, ArrayList::new);
         this.listener = listener;
     }
 
     public void updateList(List<Message> newList) {
-        this.messageList = newList != null ? newList : new ArrayList<Message>();
+        this.messageList = Objects.requireNonNullElseGet(newList, ArrayList::new);
         notifyDataSetChanged();
     }
 
@@ -76,12 +76,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.avatarFrame.setBackground(avatarBg);
 
         // Click listener
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(message);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(message);
             }
         });
     }
@@ -91,7 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return messageList.size();
     }
 
-    static class MessageViewHolder extends RecyclerView.ViewHolder {
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
         FrameLayout avatarFrame;
         ImageView imgCategoryIcon;
         TextView tvSender;

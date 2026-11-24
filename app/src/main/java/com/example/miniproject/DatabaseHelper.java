@@ -82,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Message> getAllMessages() {
         List<Message> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(
+        try (Cursor cursor = db.query(
                 TABLE_MESSAGES,
                 null,
                 null,
@@ -90,13 +90,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 COLUMN_DATE_MILLIS + " DESC"
-        );
-
-        if (cursor != null) {
+        )) {
             while (cursor.moveToNext()) {
                 list.add(cursorToMessage(cursor));
             }
-            cursor.close();
         }
         return list;
     }
@@ -107,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Message> getMessagesByCategory(String category) {
         List<Message> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(
+        try (Cursor cursor = db.query(
                 TABLE_MESSAGES,
                 null,
                 COLUMN_CATEGORY + " = ?",
@@ -115,13 +112,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 COLUMN_DATE_MILLIS + " DESC"
-        );
-
-        if (cursor != null) {
+        )) {
             while (cursor.moveToNext()) {
                 list.add(cursorToMessage(cursor));
             }
-            cursor.close();
         }
         return list;
     }
@@ -133,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Message> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String wildQuery = "%" + query + "%";
-        Cursor cursor = db.query(
+        try (Cursor cursor = db.query(
                 TABLE_MESSAGES,
                 null,
                 COLUMN_SENDER + " LIKE ? OR " + COLUMN_BODY + " LIKE ?",
@@ -141,13 +135,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 COLUMN_DATE_MILLIS + " DESC"
-        );
-
-        if (cursor != null) {
+        )) {
             while (cursor.moveToNext()) {
                 list.add(cursorToMessage(cursor));
             }
-            cursor.close();
         }
         return list;
     }
@@ -159,7 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Message> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String wildQuery = "%" + query + "%";
-        Cursor cursor = db.query(
+        try (Cursor cursor = db.query(
                 TABLE_MESSAGES,
                 null,
                 COLUMN_CATEGORY + " = ? AND (" + COLUMN_SENDER + " LIKE ? OR " + COLUMN_BODY + " LIKE ?)",
@@ -167,13 +158,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 COLUMN_DATE_MILLIS + " DESC"
-        );
-
-        if (cursor != null) {
+        )) {
             while (cursor.moveToNext()) {
                 list.add(cursorToMessage(cursor));
             }
-            cursor.close();
         }
         return list;
     }
@@ -183,15 +171,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int getTotalCount() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_MESSAGES, null);
-        int count = 0;
-        if (cursor != null) {
+        try (Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_MESSAGES, null)) {
             if (cursor.moveToFirst()) {
-                count = cursor.getInt(0);
+                return cursor.getInt(0);
             }
-            cursor.close();
         }
-        return count;
+        return 0;
     }
 
     /**
@@ -199,24 +184,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int getCategoryCount(String category) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
+        try (Cursor cursor = db.rawQuery(
                 "SELECT COUNT(*) FROM " + TABLE_MESSAGES + " WHERE " + COLUMN_CATEGORY + " = ?",
                 new String[]{category}
-        );
-        int count = 0;
-        if (cursor != null) {
+        )) {
             if (cursor.moveToFirst()) {
-                count = cursor.getInt(0);
+                return cursor.getInt(0);
             }
-            cursor.close();
         }
-        return count;
+        return 0;
     }
 
     /**
      * Deletes a single message record by its SQLite id.
      * Note: Does NOT modify or delete original phone SMS!
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean deleteMessage(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int rows = db.delete(TABLE_MESSAGES, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
@@ -226,6 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Clears all local records from SQLite.
      */
+    @SuppressWarnings("unused")
     public void clearAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_MESSAGES, null, null);

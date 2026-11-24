@@ -1,7 +1,6 @@
 package com.example.miniproject;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -126,39 +125,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-        messageAdapter = new MessageAdapter(this, null, new MessageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Message message) {
-                Intent intent = new Intent(MainActivity.this, MessageDetailActivity.class);
-                intent.putExtra("EXTRA_MESSAGE", message);
-                startActivity(intent);
-            }
+        messageAdapter = new MessageAdapter(this, null, message -> {
+            Intent intent = new Intent(MainActivity.this, MessageDetailActivity.class);
+            intent.putExtra("EXTRA_MESSAGE", message);
+            startActivity(intent);
         });
         recyclerViewMessages.setAdapter(messageAdapter);
     }
 
     private void setupCategoryClicks() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String category;
-                int id = v.getId();
-                if (id == R.id.cardBanking) {
-                    category = SMSCategorizer.CATEGORY_BANKING;
-                } else if (id == R.id.cardOtp) {
-                    category = SMSCategorizer.CATEGORY_OTP;
-                } else if (id == R.id.cardInfo) {
-                    category = SMSCategorizer.CATEGORY_INFORMATION;
-                } else if (id == R.id.cardPromo) {
-                    category = SMSCategorizer.CATEGORY_PROMOTIONS;
-                } else {
-                    category = SMSCategorizer.CATEGORY_PERSONAL;
-                }
-
-                Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
-                intent.putExtra("EXTRA_CATEGORY", category);
-                startActivity(intent);
+        View.OnClickListener listener = v -> {
+            String category;
+            int id = v.getId();
+            if (id == R.id.cardBanking) {
+                category = SMSCategorizer.CATEGORY_BANKING;
+            } else if (id == R.id.cardOtp) {
+                category = SMSCategorizer.CATEGORY_OTP;
+            } else if (id == R.id.cardInfo) {
+                category = SMSCategorizer.CATEGORY_INFORMATION;
+            } else if (id == R.id.cardPromo) {
+                category = SMSCategorizer.CATEGORY_PROMOTIONS;
+            } else {
+                category = SMSCategorizer.CATEGORY_PERSONAL;
             }
+
+            Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+            intent.putExtra("EXTRA_CATEGORY", category);
+            startActivity(intent);
         };
 
         cardBanking.setOnClickListener(listener);
@@ -178,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
                 String query = s.toString().trim();
                 if (query.isEmpty()) {
                     btnClearSearch.setVisibility(View.GONE);
-                    tvListHeader.setText("Recent Messages");
+                    tvListHeader.setText(R.string.recent_messages);
                     loadRecentMessages();
                 } else {
                     btnClearSearch.setVisibility(View.VISIBLE);
-                    tvListHeader.setText("Search Results for \"" + query + "\"");
+                    tvListHeader.setText(getString(R.string.search_results_for, query));
                     performSearch(query);
                 }
             }
@@ -191,46 +184,23 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        btnClearSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etSearch.setText("");
-            }
-        });
+        btnClearSearch.setOnClickListener(v -> etSearch.setText(""));
     }
 
     private void setupButtons() {
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SMSReader.hasSmsPermission(MainActivity.this)) {
-                    readAndSyncDeviceSms();
-                } else {
-                    showPermissionRationaleDialog();
-                }
+        btnRefresh.setOnClickListener(v -> {
+            if (SMSReader.hasSmsPermission(MainActivity.this)) {
+                readAndSyncDeviceSms();
+            } else {
+                showPermissionRationaleDialog();
             }
         });
 
-        btnLoadSample.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadDemoData();
-            }
-        });
+        btnLoadSample.setOnClickListener(v -> loadDemoData());
 
-        btnGrantPermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestSmsPermission();
-            }
-        });
+        btnGrantPermission.setOnClickListener(v -> requestSmsPermission());
 
-        btnLoadDemoDirect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadDemoData();
-            }
-        });
+        btnLoadDemoDirect.setOnClickListener(v -> loadDemoData());
     }
 
     private void checkAndRequestSmsPermission() {
@@ -249,18 +219,8 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_title)
                 .setMessage(R.string.permission_rationale)
-                .setPositiveButton(R.string.grant_permission, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestSmsPermission();
-                    }
-                })
-                .setNegativeButton("Load Demo Instead", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        loadDemoData();
-                    }
-                })
+                .setPositiveButton(R.string.grant_permission, (dialog, which) -> requestSmsPermission())
+                .setNegativeButton("Load Demo Instead", (dialog, which) -> loadDemoData())
                 .show();
     }
 
@@ -357,12 +317,11 @@ public class MainActivity extends AppCompatActivity {
             layoutEmptyState.setVisibility(View.VISIBLE);
             tvEmptyMessage.setText("No messages yet. Click 'Refresh' to scan phone SMS, or tap 'Load Demo SMS' to test.");
             recyclerViewMessages.setVisibility(View.GONE);
-            messageAdapter.updateList(allMessages);
         } else {
             layoutEmptyState.setVisibility(View.GONE);
             recyclerViewMessages.setVisibility(View.VISIBLE);
-            messageAdapter.updateList(allMessages);
         }
+        messageAdapter.updateList(allMessages);
     }
 
     private void performSearch(String query) {
@@ -371,11 +330,10 @@ public class MainActivity extends AppCompatActivity {
             layoutEmptyState.setVisibility(View.VISIBLE);
             tvEmptyMessage.setText("No messages matching \"" + query + "\"");
             recyclerViewMessages.setVisibility(View.GONE);
-            messageAdapter.updateList(results);
         } else {
             layoutEmptyState.setVisibility(View.GONE);
             recyclerViewMessages.setVisibility(View.VISIBLE);
-            messageAdapter.updateList(results);
         }
+        messageAdapter.updateList(results);
     }
 }
